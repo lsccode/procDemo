@@ -4,6 +4,7 @@ KERNEL	:= /lib/modules/`uname -r`/build #for mint/ubuntu
  
 all:
 	make -C $(KERNEL) M=`pwd` modules
+	gcc main.c -o main.out
  
 install:
 	make -C $(KERNEL) M=`pwd` modules_install

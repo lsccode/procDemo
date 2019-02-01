@@ -3,6 +3,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
+#include "procstatics.h"
 
 int main()
 {
@@ -25,6 +26,51 @@ int main()
 	size = read(fd,buf,sizeof(buf));
 
 	printf("bus is (%s)\n",buf);
+	
+	{
+		int cmd;
+		int arg = 0;
+		
+		cmd = MEMDEV_IOCPRINT;
+		arg = 0;
+		
+		if(ioctl(fd,cmd,&arg) < 0)
+		{
+			printf("call cmd MEMDEV_IOCPRINT fail\n");
+			return -1;
+		}
+		
+		cmd = MEMDEV_IOCGETDATA;
+		arg=0;
+		
+		if(ioctl(fd,cmd,&arg) < 0)
+		{
+			printf("call cmd MEMDEV_IOCGETDATA fail\n");
+			return -1;
+		}
+		printf("in user space MEMDEV_IOCGETDATA get data is %d\n\n",arg);
+		
+		arg = 1102;
+		cmd = MEMDEV_IOCSETDATA;		
+		
+		if(ioctl(fd,cmd,&arg) < 0)
+		{
+			printf("call cmd MEMDEV_IOCGETDATA fail\n");
+			return -1;
+		}
+		
+		cmd = MEMDEV_IOCGETDATA;		
+		arg = 0;
+		
+		if(ioctl(fd,cmd,&arg) < 0)
+		{
+			printf("call cmd MEMDEV_IOCGETDATA fail\n");
+			return -1;
+		}
+		printf("in user space MEMDEV_IOCGETDATA get data is %d\n\n",arg);
+		
+		
+	}
 
 	close(fd);	
 }

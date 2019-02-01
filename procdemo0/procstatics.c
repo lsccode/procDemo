@@ -8,17 +8,19 @@
 #include <linux/slab.h>		// for kzalloc, kfree
 #include <linux/uaccess.h>	// for copy_from_user
 
+#include "procstatics.h"
+
 #define M_STATIC_SPACE_SIZE (4*1024) 
 // global var
 static char *str = NULL;
- 
+int ioarg = 1101; 
 // seq_operations -> show
 static int jif_show(struct seq_file *m, void *v)
 {
 	seq_printf(m, "current kernel time is %llu\n", (unsigned long long) get_jiffies_64());
-	seq_printf(m, "str is %s\n", str);
+	seq_printf(m, "str is %d\n", ioarg);
  
-	printk("read %s !\n",str);
+	printk("read %d !\n",ioarg);
 	return 0; //!! must be 0, or will show nothing T.T
 }
  
@@ -52,6 +54,34 @@ static int jif_open(struct inode *inode, struct file *file)
 {
 	return single_open(file, jif_show, NULL);
 }
+
+long jif_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)
+{
+    int err = 0;
+    int ret = 0;
+    printk("kernel cmd is : %ld\n",cmd);
+    switch(cmd)
+    {
+    case MEMDEV_IOCPRINT:
+        printk("CMD MEMDEV_IOCPRINT DONE\n\n");
+        break;
+		
+    case MEMDEV_IOCGETDATA:
+        if(copy_to_user((int *)arg,&ioarg,sizeof(int)))
+            return -EFAULT;
+        break;
+		
+	case MEMDEV_IOCSETDATA:
+
+		if(copy_from_user(&ioarg,(int *)arg,sizeof(int)))
+			return -EFAULT;
+		break;	
+		
+    default:
+        return -EINVAL;
+    }
+    return ret;
+}
  
 static const struct file_operations jif_fops = 
 {
@@ -61,6 +91,7 @@ static const struct file_operations jif_fops =
 	.write 		= jif_write,
 	.llseek		= seq_lseek,
 	.release	= single_release,
+	.unlocked_ioctl = jif_ioctl,
 };
  
 // module init

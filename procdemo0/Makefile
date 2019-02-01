@@ -1,10 +1,12 @@
-obj-m	:= procstatics.o
-KERNEL	:= /lib/modules/`uname -r`/build #for mint/ubuntu
-#KERNEL	:= /lib/modules/`uname -r`/source #for redhat
- 
+obj-m   := procstatics.o
+#KERNEL := /lib/modules/`uname -r`/build #for mint/ubuntu
+#KERNEL := /lib/modules/`uname -r`/source #for redhat
+KERNEL := /root/workSpace1/kernel/Build/Kernel
+CC  = $(CROSS_COMPILE)gcc
+
 all:
 	make -C $(KERNEL) M=`pwd` modules
-	gcc main.c -o main.out
+	$(CC) main.c -o main.out
  
 install:
 	make -C $(KERNEL) M=`pwd` modules_install

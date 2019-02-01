@@ -29,19 +29,25 @@ static ssize_t jif_write(struct file *file, const char __user *buffer, size_t co
 {
 	//分配临时缓冲区
 	
+	printk("this is step1\n");
 	if( NULL == str)
 	{
 		str = kzalloc(M_STATIC_SPACE_SIZE, GFP_KERNEL);
-		
+		printk("this is step2\n");
 		if( NULL == str)
 		{
+			printk("this is step3\n");
 			return -ENOMEM;			
 		}
 	}
  
 	//将用户态write的字符串拷贝到内核空间
 	//copy_to|from_user(to,from,cnt)
+	printk("this is step4 1\n");
+	printk("this is step4 %s,%u\n",buffer,count);
+	printk("this is step4 2\n");
 	if (copy_from_user(str, buffer, count)) {
+		printk("this is step4\n");
 		return -EFAULT;
 	}
  

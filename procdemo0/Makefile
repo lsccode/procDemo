@@ -1,12 +1,13 @@
-obj-m := procstatics.o                   #要生成的模块名     
-modules-objs:= procst.o        #生成这个模块名所需要的目标文件
-
-KDIR := /lib/modules/`uname -r`/build   
-
-PWD := $(shell pwd)
-
-default:
-	make -C $(KDIR) M=$(PWD) modules
-
+obj-m	:= procstatics.o
+KERNEL	:= /lib/modules/`uname -r`/build #for mint/ubuntu
+#KERNEL	:= /lib/modules/`uname -r`/source #for redhat
+ 
+all:
+	make -C $(KERNEL) M=`pwd` modules
+ 
+install:
+	make -C $(KERNEL) M=`pwd` modules_install
+	depmod -A
+ 
 clean:
-	rm -rf *.o  *.cmd *.ko *.mod.c .tmp_versions *.order *.symvers
+	make -C $(KERNEL) M=`pwd` clean	

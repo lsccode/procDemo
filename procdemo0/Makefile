@@ -1,7 +1,7 @@
 obj-m   := procstatics.o
 #KERNEL := /lib/modules/`uname -r`/build #for mint/ubuntu
 #KERNEL := /lib/modules/`uname -r`/source #for redhat
-KERNEL := /root/workSpace1/kernel/Build/Kernel
+KERNEL := /root/workSpace/kernel/Build/Kernel
 CC  = $(CROSS_COMPILE)gcc
 
 all:

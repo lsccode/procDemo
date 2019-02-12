@@ -18,9 +18,9 @@ int ioarg = 1101;
 static int jif_show(struct seq_file *m, void *v)
 {
 	seq_printf(m, "current kernel time is %llu\n", (unsigned long long) get_jiffies_64());
-	seq_printf(m, "str is %d\n", ioarg);
+	seq_printf(m, "str is %d ,%s\n", ioarg,str);
  
-	printk("read %d !\n",ioarg);
+	printk("str is %d ,%s\n", ioarg,str);
 	return 0; //!! must be 0, or will show nothing T.T
 }
  
@@ -43,15 +43,15 @@ static ssize_t jif_write(struct file *file, const char __user *buffer, size_t co
  
 	//将用户态write的字符串拷贝到内核空间
 	//copy_to|from_user(to,from,cnt)
-	printk("this is step4 1\n");
+/* 	printk("this is step4 1\n");
 	printk("this is step4 %s,%u\n",buffer,count);
-	printk("this is step4 2\n");
+	printk("this is step4 2\n"); */
 	if (copy_from_user(str, buffer, count)) {
 		printk("this is step4\n");
 		return -EFAULT;
 	}
  
-	printk("write %s !\n",buffer);
+	printk("write %s !\n",str);
 	return count;
 }
  

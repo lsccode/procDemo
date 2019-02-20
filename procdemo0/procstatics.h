@@ -1,7 +1,7 @@
 #ifndef _PROC_STATTICS_H_
 #define _PROC_STATTICS_H_
 
-#include<linux/ioctl.h>
+#include <linux/ioctl.h>
 
 #ifndef MEMDEV_MAJOR
 #define MEMDEV_MAJOR 0
